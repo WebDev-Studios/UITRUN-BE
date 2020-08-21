@@ -1,0 +1,24 @@
+server:
+    port: 3000
+
+db:
+    database: 'uitrun'
+    port: 3306
+
+jwt:
+    expiresIn: 7d
+    session: false
+    jwtSecret: 'aaa'
+
+session:
+    name: 'session'
+    proxy: true
+    resave: true
+    saveUninitialized: true
+    cookie:
+        secure: false
+    secret: 'session_secrect'
+
+static:
+    maxAge: '30 days'
+    dotfiles: 'allow'

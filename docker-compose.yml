@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+    backend:
+        container_name: ump-api
+        restart: always
+        volumes:
+            - ump-volume:/usr/src/app
+        ports:
+            - 3000:3000
+        env_file:
+            - ./.env
+        networks:
+            - ump-net
+        # extra_hosts:
+        #     - docker.host:172.17.0.1
+volumes:
+    ump-volume:
+networks:
+    ump-net:
