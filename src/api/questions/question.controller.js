@@ -1,25 +1,25 @@
 const questionService = require('./question.service');
-// const scoreboardService = require('../scoreBoard/models/board');
+const scoreboardService = require('../scoreBoard/board.service');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 
 module.exports = {
     getRandomExam: async function (req, res, next) {
         try {
-            /*
             const { id } = req.user;
+            console.log(req.user.id);
             // check user be made exam
-            if (await scoreboardService.checkUser(id)) {
-                // if yes -> return message
+            if (await scoreboardService.getScoreById(id)) {
+                // if yes -> return me  ssage
                 throw new AppError(
                     httpStatus.NOT_FOUND,
                     'User is yet made this exam.',
                     true,
                 );
             }
-            */
 
             // if not yes -> make random exam
+            await scoreboardService.insertNewUser(id);
             const exam = await questionService.getRandomExam();
 
             return res.json(exam);
@@ -30,16 +30,13 @@ module.exports = {
     finalExam: async function (req, res, next) {
         try {
             const { arrayAns } = req.body;
-            /*
             const { id } = req.user;
-            // update score for user
-            const score = await scoreboardService.updateScore(id, examScore);
 
-            return res.json(score);
-             */
             const examScore = await questionService.checkQuestionToScore(
                 arrayAns,
             );
+            // update score for user
+            const score = await scoreboardService.updateScore(id, examScore);
 
             return res.json(examScore);
         } catch (err) {
