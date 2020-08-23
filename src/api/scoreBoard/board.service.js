@@ -11,6 +11,7 @@ module.exports = {
         const user = await models.board.create({
             userId: id,
             startTime: new Date(Date.now()),
+            score: 0,
         });
         return user;
     },
@@ -22,7 +23,7 @@ module.exports = {
             },
             {
                 where: {
-                    id: id,
+                    userId: id,
                 },
             },
         );
@@ -31,5 +32,5 @@ module.exports = {
     getScoreById: async (id) => {
         const score = await models.board.findByPk(id);
         return score;
-    }
+    }, 
 };

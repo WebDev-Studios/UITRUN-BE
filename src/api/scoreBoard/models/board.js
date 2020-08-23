@@ -15,11 +15,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             finishTime: { 
                 type: Sequelize.DATE, 
-                allowNull: true 
             },
             score: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
             }
         },
         {

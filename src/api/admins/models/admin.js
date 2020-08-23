@@ -24,6 +24,7 @@ module.exports = (sequelize, Sequelize) => {
                     args: true,
                     msg: 'User with this stdId already exist.',
                 },
+                defaultValue: 1,
             },
             fullName: {
                 type: Sequelize.STRING(255),
@@ -34,15 +35,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             email: {
                 type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: {
-                    args: true,
-                    msg: 'User with this email already exist.',
-                },
             },
             dateOfBirth: {
                 type: Sequelize.DATEONLY,
-                allowNull: false,
             },
             username: {
                 type: Sequelize.STRING(255),
