@@ -1,9 +1,9 @@
-const userService = require('./admin.service');
+const adminService = require('./admin.service');
 
 module.exports = {
     getAllUser: async (req, res, next) => {
         try {
-            const user = await userService.getAllUser();
+            const user = await adminService.getAllUser();
 
             return res.json(user);
         } catch (error) {
@@ -14,7 +14,7 @@ module.exports = {
     whoAmI: async (req, res, next) => {
         try {
             const { id } = req.user;
-            const user = await userService.whoAmI(id);
+            const user = await adminService.whoAmI(id);
 
             res.json(user);
         } catch (error) {
@@ -25,7 +25,7 @@ module.exports = {
     getUserById: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const user = await userService.getUserById(id);
+            const user = await adminService.getUserById(id);
 
             res.json(user);
         } catch (error) {
@@ -36,7 +36,7 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { id } = req.user;
-            const user = await userService.updateUserById(id, req.body);
+            const user = await adminService.updateUserById(id, req.body);
 
             res.json(user);
         } catch (error) {
@@ -47,7 +47,7 @@ module.exports = {
     activateUserByIds: async (req, res, next) => {
         try {
             const { ids } = req.body;
-            const activated = await userService.activateUserByIds(ids);
+            const activated = await adminService.activateUserByIds(ids);
 
             res.json({ activated });
         } catch (error) {
@@ -59,7 +59,7 @@ module.exports = {
         try {
             const { id } = req.params;
             const { role } = req.body;
-            const granted = await userService.updateUserRoleById(id, role);
+            const granted = await adminService.updateUserRoleById(id, role);
 
             res.json({ granted });
         } catch (error) {
@@ -70,7 +70,7 @@ module.exports = {
     deleteUserById: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const affected = await userService.deleteUserById(id);
+            const affected = await adminService.deleteUserById(id);
 
             res.json({ affected });
         } catch (error) {

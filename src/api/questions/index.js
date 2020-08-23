@@ -13,11 +13,27 @@ router.use(auth.authenticate);
  * -------------- FOR USERS ----------------
  */
 
-router.get('/', questionCtl.getQuestions);
-router.get('/random', questionCtl.getRandomQuestion); // Return a random question by a set of category
-router.get('/exam', questionCtl.getRandomExam); // Return a random exam
-router.get('/result', questionCtl.getExamResult);
-router.get('/result/:id', questionCtl.getQuestionResultById);
+router.get('/', checkPermission(['admin', 'editor', 'user']), questionCtl.getQuestions);
+router.get(
+    '/random',
+    checkPermission(['admin', 'editor', 'user']),
+    questionCtl.getRandomQuestion,
+); // Return a random question by a set of category
+router.get(
+    '/exam',
+    checkPermission(['admin', 'editor', 'user']),
+    questionCtl.getRandomExam,
+); // Return a random exam
+router.get(
+    '/result',
+    checkPermission(['admin', 'editor', 'user']),
+    questionCtl.getExamResult,
+);
+router.get(
+    '/result/:id',
+    checkPermission(['admin', 'editor', 'user']),
+    questionCtl.getQuestionResultById,
+);
 
 /**
  * -------------- FOR ADMINS ----------------

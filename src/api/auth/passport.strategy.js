@@ -20,7 +20,7 @@ module.exports = function () {
 
     const strategy = new Strategy(params, async (payload, done) => {
         try {
-            const user = await models.user.scope('role').findByPk(payload.sub);
+            const user = await models.admin.scope('role').findByPk(payload.sub);
 
             if (user) {
                 return done(null, {

@@ -19,9 +19,9 @@ module.exports = {
     // All function below is for USER only
     createUser: async function (body) {
         const user = await models.user.create({
-            userCode: body.userCode,
             stdId: body.stdId,
             fullName: body.fullName,
+            userCode: body.username,
             roleId: rolesMap.user, // user role
         });
 
@@ -44,7 +44,7 @@ module.exports = {
     // All function below is for ADMIN only
 
     getUserById: async function (id) {
-        const found = await models.user.scope('role').findByPk(id);
+        const found = await models.user.findByPk(id);
 
         if (!found) {
             throw new AppError(
@@ -100,9 +100,6 @@ module.exports = {
 
     getAllUser: async function () {
         const info = await models.user.findAll({
-            where: {
-                roleId: [rolesMap.user, rolesMap.editor],
-            },
         });
         return info;
     },
