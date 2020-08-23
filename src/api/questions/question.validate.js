@@ -10,9 +10,7 @@ const questionCreateSchema = Joi.object({
     answerC: Joi.string().min(1).required(),
     answerD: Joi.string().min(1).required(),
     result: Joi.valid('A', 'B', 'C', 'D').required(),
-    image: Joi.string().max(255),
-    isShuffle: Joi.valid(0, 1, true, false),
-    categoryFourId: Joi.number().required(),
+    image: Joi.string().max(255)
 }).unknown(true);
 
 //  ...but not when we update its data.
@@ -24,8 +22,6 @@ const questionUpdateSchema = Joi.object({
     answerD: Joi.string().min(1),
     result: Joi.valid('A', 'B', 'C', 'D'),
     image: Joi.string().max(255),
-    isShuffle: Joi.valid(0, 1, true, false),
-    categoryFourId: Joi.number(),
 }).unknown(true);
 
 module.exports = {

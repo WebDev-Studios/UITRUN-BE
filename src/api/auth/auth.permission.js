@@ -4,7 +4,7 @@ const { httpStatus } = require('../../common/error/http-status');
 
 module.exports = {
     checkPermission: (...allowed) => {
-        const isAllowed = (usersRole = []) => {
+        const isAllowed = (usersRole = []) => { 
             // If allowed array contain *, then return true
             if (_.intersection(...allowed, ['*']).length > 0) {
                 return true;

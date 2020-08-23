@@ -12,41 +12,37 @@ router.use(auth.authenticate);
 /**
  * -------------- FOR USERS ----------------
  */
-
-router.get('/',checkPermission(['admin', 'editor', 'user']), questionCtl.getQuestions);
-router.get('/random', questionCtl.getRandomQuestion); // Return a random question
-router.get('/exam', questionCtl.getRandomExam); // Return a random exam
-router.get('/result', questionCtl.getExamResult);
-router.get('/result/:id', questionCtl.getQuestionResultById);
+router
+    .route('/exam')
+    .get(
+        checkPermission(['admin', 'editor', 'user']),
+        questionCtl.getRandomExam,
+    ) // Return a random exam detail
+    .post(checkPermission(['admin', 'editor', 'user']), questionCtl.finalExam); // Return score for this exam
 
 /**
  * -------------- FOR ADMINS ----------------
  */
+router
+    .route('/')
+    .get(checkPermission(['admin', 'editor']), questionCtl.getAll)
+    .post(
+        checkPermission(['admin', 'editor']),
+        validateQuestionCreate,
+        questionCtl.create,
+    );
+router
+    .route('/search')
+    .get(checkPermission(['admin', 'editor']), questionCtl.searchByContent);
 
-router.get(
-    '/:id',
-    checkPermission(['admin', 'editor']),
-    questionCtl.getQuestionById,
-);
-
-router.post(
-    '/',
-    checkPermission(['admin', 'editor']),
-    validateQuestionCreate,
-    questionCtl.createQuestion,
-); // Create new question
-
-router.patch(
-    '/:id',
-    checkPermission(['admin', 'editor']),
-    validateQuestionUpdate,
-    questionCtl.updateQuestionById,
-); // Update question's information
-
-router.delete(
-    '/:id',
-    checkPermission(['admin']),
-    questionCtl.deleteQuestionById,
-); // Delete a question
+router
+    .route('/:id')
+    .get(checkPermission(['admin', 'editor']), questionCtl.getById)
+    .patch(
+        checkPermission(['admin', 'editor']),
+        validateQuestionUpdate,
+        questionCtl.updateById,
+    )
+    .delete(checkPermission(['admin']), questionCtl.deleteById);
 
 module.exports = router;

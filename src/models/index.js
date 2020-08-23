@@ -52,7 +52,7 @@ db.Sequelize = Sequelize;
 
 (async function seeders() {
     // try {
-    //     await db.user.create({
+    //     await db.admin.create({
     //         stdId: 'admin',
     //         fullName: 'admin',
     //         email: 'admin@uit.edu.vn',
