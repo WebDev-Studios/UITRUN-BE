@@ -36,7 +36,7 @@ module.exports = (sequelize, Sequelize) => {
 
     Board.associate = function (models) {
         Board.belongsTo(models.user, {
-            foreignKey: 'userId',
+            foreignKey: 'user_id',
             as: 'user',
             onDelete: 'CASCADE',
         });

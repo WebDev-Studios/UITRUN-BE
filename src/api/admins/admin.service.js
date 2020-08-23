@@ -61,9 +61,8 @@ module.exports = {
         const user = await models.user.findOne({
             where: {
                 [models.Sequelize.Op.or]: [
-                    { username: identifier },
+                    { userCode: identifier },
                     { stdId: identifier },
-                    { email: identifier },
                 ],
             },
         });
