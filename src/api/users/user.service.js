@@ -17,16 +17,11 @@ module.exports = {
     },
 
     // All function below is for USER only
-    createUser: async function (body) {
+    createUser: async function (userCode) {
         const user = await models.user.create({
-            stdId: body.stdId,
-            fullName: body.fullName,
-            major: body.major,
-            email: body.email,
-            dateOfBirth: body.dateOfBirth,
-            username: body.username,
-            password: body.password,
-            roleId: rolesMap.user, // user role
+            userCode: userCode,
+            stdId: '',
+            fullName: '',
         });
 
         return user;

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 module.exports = (sequelize, Sequelize) => {
     class User extends Sequelize.Model {}
 
@@ -17,8 +18,13 @@ module.exports = (sequelize, Sequelize) => {
             },
             stdId: {
                 type: Sequelize.STRING(50),
-                allowNull: false
-            }
+                allowNull: false,
+            },
+            isDidExam: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false,
+            },
         },
         {
             sequelize,
@@ -28,15 +34,34 @@ module.exports = (sequelize, Sequelize) => {
         },
     );
 
-    User.associate = function (models) {
+    // User.associate = function (models) {
+    //     User.hasOne(models.board, {
+    //         foreignKey: {
+    //             unique: true,
+    //             allowNull: false,
+    //         },
+    //     });
+    // };
 
-        User.hasOne(models.board, {
-            foreignKey: {
-                unique: true,
-                allowNull: false,
-            },
-        });
-    }
+    /**
+     * -------------- INSTANCE METHOD ----------------
+     */
+
+    /**
+     * -------------- CLASS METHOD ----------------
+     */
+
+    User.validateUserCredentials = async function (credentials) {
+        const { userCode } = credentials;
+
+        const user = await User.findOne({ where: { userCode } });
+
+        if (user) {
+            return user;
+        }
+
+        return null;
+    };
 
     return User;
-}
+};

@@ -3,6 +3,7 @@ const AppError = require('../error/error');
 const { httpStatus } = require('../error/http-status');
 
 function schemaValidator(joiSchema, data) {
+    console.log(data);
     const result = joiSchema.validate(data, {
         abortEarly: false,
     });

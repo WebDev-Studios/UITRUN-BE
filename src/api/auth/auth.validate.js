@@ -2,6 +2,10 @@
 const Joi = require('@hapi/joi');
 const { schemaValidator } = require('../../common/schema-validator/utils');
 
+const userLoginSchema = Joi.object({
+    userCode: Joi.string().min(5).max(5).required(),
+}).unknown(true);
+
 const loginSchema = Joi.object({
     username: Joi.string().min(1).max(255).required(),
     password: Joi.string().min(1).max(255).required(),
@@ -18,11 +22,21 @@ const registerSchema = Joi.object({
     fullName: Joi.string().min(6).max(255).required(),
     major: Joi.string().min(6).max(255),
     email: Joi.string().min(6).max(255).email().required(),
-    dateOfBirth: Joi.date().required(),
+    // dateOfBirth: Joi.date().required(),
 }).unknown(true);
 
 module.exports = {
     // Use for login
+    validateUserLogin: function (req, res, next) {
+        console.log(req.body);
+        try {
+            schemaValidator(userLoginSchema, req.body);
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    },
     validateLogin: function (req, res, next) {
         try {
             schemaValidator(loginSchema, req.body);
