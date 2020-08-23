@@ -32,13 +32,13 @@ module.exports = {
             );
         }
 
-        if (!info.isActive) {
-            throw new AppError(
-                httpStatus.FORBIDDEN,
-                'This account hasn’t been activated yet.',
-                true,
-            );
-        }
+        // if (!info.isActive) {
+        //     throw new AppError(
+        //         httpStatus.FORBIDDEN,
+        //         'This account hasn’t been activated yet.',
+        //         true,
+        //     );
+        // }
 
         const jwt = issueJWT(info.id);
 
