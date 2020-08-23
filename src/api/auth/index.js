@@ -1,13 +1,17 @@
 const router = require('express').Router();
 const authCtl = require('./auth.controller');
-const { validateLogin, validateRegister } = require('./auth.validate');
+const {
+    validateUserLogin,
+    validateLogin,
+    validateRegister,
+} = require('./auth.validate');
 
 /**
  * *-------------- FOR USERS ----------------
  */
 
-router.post('/login', validateLogin, authCtl.loginForUsers);
-router.post('/register', validateRegister, authCtl.register);
+router.post('/user-login', validateUserLogin, authCtl.loginForUsers);
+// router.post('/register', validateRegister, authCtl.register);
 router.post('/forgot-password', authCtl.sendPasswordResetEmail);
 router.post('/reset-password', authCtl.resetPassword);
 

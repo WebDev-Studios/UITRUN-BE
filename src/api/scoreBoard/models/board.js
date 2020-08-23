@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 module.exports = (sequelize, Sequelize) => {
     class Board extends Sequelize.Model {}
 
@@ -6,21 +8,21 @@ module.exports = (sequelize, Sequelize) => {
             userId: {
                 type: Sequelize.STRING(50),
                 primaryKey: true,
-                unique : true,
-                allowNull : false,
+                unique: true,
+                allowNull: false,
             },
             startTime: {
                 type: Sequelize.DATE,
                 allowNull: false,
             },
-            finishTime: { 
-                type: Sequelize.DATE, 
-                allowNull: true 
+            finishTime: {
+                type: Sequelize.DATE,
+                allowNull: true,
             },
             score: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-            }
+            },
         },
         {
             sequelize,
@@ -31,16 +33,17 @@ module.exports = (sequelize, Sequelize) => {
     );
 
     /**
-     * -------------- ASSOSIATION ----------------
+     * -------------- ASSOCIATION ----------------
      */
-
+    
     Board.associate = function (models) {
         Board.belongsTo(models.user, {
-            foreignKey: 'userId',
+            foreignKey: 'user_id',
             as: 'user',
             onDelete: 'CASCADE',
         });
     };
+    
 
     return Board;
 };
