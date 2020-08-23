@@ -5,41 +5,28 @@ const { httpStatus } = require('../../common/error/http-status');
 module.exports = {
     // ###QUESTIONS
     getQuestions: async function (query) {
-        const { catnum, catid, content } = query;
+        const { content } = query;
 
         let sql = `select 
                         questions.id,
                         questions.content,
-                        questions.answer_A   as answerA,
-                        questions.answer_B   as answerB,
-                        questions.answer_C   as answerC,
-                        questions.answer_D   as answerD,
-                        questions.is_shuffle as isShuffle,
+                        questions.answer_a   as answerA,
+                        questions.answer_b   as answerB,
+                        questions.answer_c   as answerC,
+                        questions.answer_d   as answerD,
                         questions.image,
                         questions.description,
-                        category_fours.name  as categoryFour, 
-                        category_threes.name as categoryThree,
-                        category_twos.name   as categoryTwo,
-                        category_ones.name   as categoryOne
                     from 
                         questions 
-                        left join category_fours  on questions.category_four_id = category_fours.id 
-                        left join category_threes on category_fours.parent_id   = category_threes.id
-                        left join category_twos   on category_threes.parent_id  = category_twos.id
-                        left join category_ones   on category_twos.parent_id    = category_ones.id
                     where 
                         1 = 1 `;
-
-        if (catnum && catid) {
-            sql += `AND category_${catnum}s.id in (:catid) `;
-        }
 
         if (content) {
             sql += 'AND questions.content LIKE :content ';
         }
 
         const questions = await models.sequelize.query(sql, {
-            replacements: { catid: catid, content: `%${content}%` },
+            replacements: { content: `%${content}%` },
             type: models.sequelize.QueryTypes.SELECT,
         });
 
@@ -47,7 +34,7 @@ module.exports = {
     },
 
     getQuestionById: async function (id) {
-        const found = await models.question.scope('categories').findByPk(id);
+        const found = await models.question.findByPk(id);
 
         if (!found) {
             throw new AppError(
@@ -60,42 +47,26 @@ module.exports = {
         return found;
     },
 
-    getRandomQuestion: async function (query) {
-        const { catnum, catid } = query;
-
-        let sql = `select 
+    getRandomQuestion: async function () {
+        const sql = `select 
                         questions.id,
                         questions.content,
-                        questions.answer_A   as answerA,
-                        questions.answer_B   as answerB,
-                        questions.answer_C   as answerC,
-                        questions.answer_D   as answerD,
-                        questions.is_shuffle as isShuffle,
+                        questions.answer_a   as answerA,
+                        questions.answer_b   as answerB,
+                        questions.answer_c   as answerC,
+                        questions.answer_d   as answerD,
                         questions.image,
                         questions.description,
-                        category_fours.name  as categoryFour, 
-                        category_threes.name as categoryThree,
-                        category_twos.name   as categoryTwo,
-                        category_ones.name   as categoryOne
                     from 
                         questions
-                        join category_fours  on questions.category_four_id = category_fours.id 
-                        join category_threes on category_fours.parent_id   = category_threes.id
-                        join category_twos   on category_threes.parent_id  = category_twos.id
-                        join category_ones   on category_twos.parent_id    = category_ones.id
                         JOIN 
                             (SELECT (RAND() * (SELECT MAX(id) FROM questions)) AS id) AS tmp 
                                              on questions.id              >= tmp.id
                     where 1 = 1 `;
 
-        if (catnum && catid) {
-            sql += `AND category_${catnum}s.id in (:catid) `;
-        }
-
         const question = await models.sequelize.query(
             `${sql} ORDER BY questions.id ASC LIMIT 1`,
             {
-                replacements: { catid: catid },
                 type: models.sequelize.QueryTypes.SELECT,
             },
         );
@@ -121,43 +92,29 @@ module.exports = {
     },
 
     getRandomExam: async function (query) {
-        const { catnum, catid } = query;
         let { limit } = query;
 
-        let sql = `select 
+        const sql = `select 
                         questions.id,
                         questions.content,
-                        questions.answer_A   as answerA,
-                        questions.answer_B   as answerB,
-                        questions.answer_C   as answerC,
-                        questions.answer_D   as answerD,
-                        questions.is_shuffle as isShuffle,
+                        questions.answer_a   as answerA,
+                        questions.answer_b   as answerB,
+                        questions.answer_c   as answerC,
+                        questions.answer_d   as answerD,
                         questions.image,
                         questions.description,
-                        category_fours.name  as categoryFour, 
-                        category_threes.name as categoryThree,
-                        category_twos.name   as categoryTwo,
-                        category_ones.name   as categoryOne
                     from 
                         questions
-                        join category_fours  on questions.category_four_id = category_fours.id 
-                        join category_threes on category_fours.parent_id   = category_threes.id
-                        join category_twos   on category_threes.parent_id  = category_twos.id
-                        join category_ones   on category_twos.parent_id    = category_ones.id
                         JOIN (SELECT id FROM questions ORDER BY RAND() LIMIT :limit) as tmp ON questions.id=tmp.id
                     where
                         1 = 1 `;
-
-        if (catnum && catid) {
-            sql += `AND category_${catnum}s.id in (:catid) `;
-        }
 
         if (!limit) {
             limit = 40;
         }
 
         const question = await models.sequelize.query(sql, {
-            replacements: { catid: catid, limit: parseInt(limit, 10) },
+            replacements: { limit: parseInt(limit, 10) },
             type: models.sequelize.QueryTypes.SELECT,
         });
 
@@ -165,44 +122,16 @@ module.exports = {
     },
 
     createQuestion: async function (body) {
-        const { categoryFourId } = body;
-
-        const categoryFour = await models.category_four.findByPk(
-            categoryFourId,
-        );
-        if (!categoryFour) {
-            throw new AppError(
-                httpStatus.UNPROCESSABLE_ENTITY,
-                'This categoryFourId does not match any category.',
-                true,
-            );
-        }
-
-        // Insert new category
         const question = await models.question.create(body);
 
         return question;
     },
 
     updateQuestionById: async function (id, body) {
-        const { categoryFourId } = body;
-
-        const categoryFour = await models.category_four.findByPk(
-            categoryFourId,
-        );
-        if (categoryFourId && !categoryFour) {
-            throw new AppError(
-                httpStatus.UNPROCESSABLE_ENTITY,
-                'This categoryFourId does not match any category.',
-                true,
-            );
-        }
-
         const question = await this.getQuestionById(id);
         question.set(body);
         const updated = await question.save();
 
-        delete question.dataValues.categoryFour;
         return updated;
     },
 

@@ -13,8 +13,8 @@ router.use(auth.authenticate);
  * -------------- FOR USERS ----------------
  */
 
-router.get('/', questionCtl.getQuestions);
-router.get('/random', questionCtl.getRandomQuestion); // Return a random question by a set of category
+router.get('/',checkPermission(['admin', 'editor', 'user']), questionCtl.getQuestions);
+router.get('/random', questionCtl.getRandomQuestion); // Return a random question
 router.get('/exam', questionCtl.getRandomExam); // Return a random exam
 router.get('/result', questionCtl.getExamResult);
 router.get('/result/:id', questionCtl.getQuestionResultById);
