@@ -6,12 +6,12 @@ module.exports = (sequelize, Sequelize) => {
             userId: {
                 type: Sequelize.STRING(50),
                 primaryKey: true,
-                unique : true,
+                unique: true,
                 allowNull : false,
             },
             startTime: {
                 type: Sequelize.DATE,
-                allowNull: false,
+                allowNull: true,
             },
             finishTime: { 
                 type: Sequelize.DATE, 
@@ -19,7 +19,8 @@ module.exports = (sequelize, Sequelize) => {
             },
             score: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                defaultValue: null,
+                allowNull: true,
             }
         },
         {
@@ -36,7 +37,7 @@ module.exports = (sequelize, Sequelize) => {
 
     Board.associate = function (models) {
         Board.belongsTo(models.user, {
-            foreignKey: 'userId',
+            foreignKey: 'user_id',
             as: 'user',
             onDelete: 'CASCADE',
         });
