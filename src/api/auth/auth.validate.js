@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-param-reassign */
 const Joi = require('@hapi/joi');
 const { schemaValidator } = require('../../common/schema-validator/utils');
@@ -28,7 +29,6 @@ const registerSchema = Joi.object({
 module.exports = {
     // Use for login
     validateUserLogin: function (req, res, next) {
-        console.log(req.body);
         try {
             schemaValidator(userLoginSchema, req.body);
 

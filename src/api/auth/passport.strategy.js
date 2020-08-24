@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const config = require('config').get('jwt');
@@ -20,13 +21,16 @@ module.exports = function () {
 
     const strategy = new Strategy(params, async (payload, done) => {
         try {
-            const user = await models.admin.scope('role').findByPk(payload.sub);
+            const admin = await models.admin.scope('role').findByPk(payload.sub);
+            const user = await models.user.scope('role').findByPk(payload.sub);
+            
+            const info = admin || user;
 
-            if (user) {
+            if (info) {
                 return done(null, {
-                    id: user.id,
-                    role: user.role.name,
-                    isActive: user.isActive,
+                    id: info.id,
+                    role: info.role.name,
+                    isActive: info.isActive,
                 });
             }
 

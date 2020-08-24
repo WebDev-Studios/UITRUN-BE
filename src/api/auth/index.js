@@ -1,8 +1,8 @@
+/* eslint-disable prettier/prettier */
 const router = require('express').Router();
 const authCtl = require('./auth.controller');
 const {
     validateUserLogin,
-    validateLogin,
     validateRegister,
 } = require('./auth.validate');
 
@@ -10,8 +10,8 @@ const {
  * *-------------- FOR USERS ----------------
  */
 
-router.post('/user-login', validateUserLogin, authCtl.loginForUsers);
-// router.post('/register', validateRegister, authCtl.register);
+router.post('/login', validateUserLogin, authCtl.loginForUsers);
+router.post('/register', validateRegister, authCtl.register);
 router.post('/forgot-password', authCtl.sendPasswordResetEmail);
 router.post('/reset-password', authCtl.resetPassword);
 

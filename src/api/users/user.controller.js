@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const userService = require('./user.service');
 
 module.exports = {

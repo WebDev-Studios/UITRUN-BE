@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const _ = require('lodash');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
@@ -18,6 +19,7 @@ module.exports = {
 
         // return a middleware
         return (req, res, next) => {
+            console.log(req.user.role, ...allowed);
             if (isAllowed([req.user.role])) {
                 next();
             } else {

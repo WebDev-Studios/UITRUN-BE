@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-param-reassign */
 const Joi = require('@hapi/joi');
 const { schemaValidator } = require('../../common/schema-validator/utils');
@@ -12,16 +13,8 @@ const idListSchema = Joi.object({
 }).unknown(true);
 
 const userUpdateSchema = Joi.object({
-    username: Joi.string().min(6).max(255),
-    password: Joi.string()
-        .min(6)
-        .max(255)
-        .regex(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/),
     stdId: Joi.string().min(6).max(255),
     fullName: Joi.string().min(6).max(255),
-    major: Joi.string().min(6).max(255),
-    email: Joi.string().min(6).max(255).email(),
-    dateOfBirth: Joi.date(),
 }).unknown(true);
 
 module.exports = {
@@ -48,6 +41,7 @@ module.exports = {
             next(err);
         }
     },
+
 
     validateActivationUpdate: function (req, res, next) {
         try {

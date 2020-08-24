@@ -14,15 +14,22 @@ module.exports = (sequelize, Sequelize) => {
             },
             fullName: {
                 type: Sequelize.STRING(255),
+                defaultValue: '',
                 allowNull: false,
             },
             stdId: {
                 type: Sequelize.STRING(50),
+                defaultValue: '',
                 allowNull: false,
             },
-            isDidExam: {
+            roleId: {
+                type: Sequelize.INTEGER,
+                defaultValue: 1,
+                allowNull: false,
+            },
+            isActive: {
                 type: Sequelize.BOOLEAN,
-                defaultValue: false,
+                defaultValue: true,
                 allowNull: false,
             },
         },
@@ -34,14 +41,30 @@ module.exports = (sequelize, Sequelize) => {
         },
     );
 
-    // User.associate = function (models) {
-    //     User.hasOne(models.board, {
-    //         foreignKey: {
-    //             unique: true,
-    //             allowNull: false,
-    //         },
-    //     });
-    // };
+    User.associate = function (models) {
+        User.belongsTo(models.role, {
+            foreignKey: 'roleId',
+            as: 'role',
+            // onDelete: 'SET NULL',
+        });
+
+        /**
+         * -------------- SCOPES ----------------
+         */
+
+        User.addScope('role', {
+            include: [
+                {
+                    model: models.role,
+                    as: 'role',
+                    required: true,
+                    attributes: {
+                        exclude: ['id', 'description'],
+                    },
+                },
+            ],
+        });
+    }
 
     /**
      * -------------- INSTANCE METHOD ----------------
@@ -51,12 +74,14 @@ module.exports = (sequelize, Sequelize) => {
      * -------------- CLASS METHOD ----------------
      */
 
-    User.validateUserCredentials = async function (credentials) {
+    User.validateUserCredentials = async function (credentials, role) {
         const { userCode } = credentials;
 
-        const user = await User.findOne({ where: { userCode } });
-
-        if (user) {
+        const user = await User.scope('role').findOne({ where: { userCode } });
+        if (
+            user &&
+            (user.role.name === role)
+        ) {
             return user;
         }
 

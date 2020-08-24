@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const Sequelize = require('sequelize');
 const path = require('path');
 const config = require('config').get('db');

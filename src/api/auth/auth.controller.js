@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const authService = require('./auth.service');
 
 module.exports = {
@@ -13,12 +14,10 @@ module.exports = {
 
     loginForUsers: async function (req, res, next) {
         try {
-            console.log(` Controller data: ${req.body}`);
             const DTO = await authService.login(req.body, 'user'); // for users and editors
 
             res.json(DTO);
         } catch (err) {
-            console.log(` Controller data - error: ${req.body}`);
             next(err);
         }
     },

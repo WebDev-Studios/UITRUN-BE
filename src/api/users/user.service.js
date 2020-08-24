@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable camelcase */
 const models = require('../../models');
 const AppError = require('../../common/error/error');
@@ -8,7 +9,7 @@ module.exports = {
     whoAmI: async function (id) {
         const user = await this.getUserById(id);
 
-        delete user.dataValues.password;
+        delete user.dataValues.stdId;
         delete user.dataValues.roleId;
         delete user.dataValues.role;
         delete user.dataValues.id;
@@ -17,11 +18,12 @@ module.exports = {
     },
 
     // All function below is for USER only
-    createUser: async function (userCode) {
+    uCreateUser: async function (userCode) {
         const user = await models.user.create({
             userCode: userCode,
             stdId: '',
             fullName: '',
+            roleId: rolesMap.user, // user role
         });
 
         return user;
@@ -29,6 +31,14 @@ module.exports = {
 
     updateUserById: async function (id, body) {
         const user = await this.getUserById(id);
+        // Only update when not have data
+        if (user.stdId !== '' || user.fullName !== '') {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                'This user has been updated.',
+                true,
+            );
+        }
         user.set(body);
         const updated = await user.save();
 
@@ -43,7 +53,7 @@ module.exports = {
     // All function below is for ADMIN only
 
     getUserById: async function (id) {
-        const found = await models.user.scope('role').findByPk(id);
+        const found = await models.user.findByPk(id);
 
         if (!found) {
             throw new AppError(

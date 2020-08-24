@@ -1,11 +1,13 @@
+/* eslint-disable prettier/prettier */
 const models = require('../../models');
 const userCodeArr = require('../users/user.code').userCodeArray;
-const { createUser, getUserByIdentifier } = require('../users/user.service');
+const { createUser, getUserByIdentifier } = require('../admins/admin.service');
+const { uCreateUser } = require('../users/user.service');
 const { issueJWT } = require('../../common/crypto/utils');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 const { passwordResetEmail } = require('../../common/email/send');
-const admin = require('../admins/models/admin');
+// const admin = require('../admins/models/admin');
 
 module.exports = {
     register: async function (body) {
@@ -22,10 +24,14 @@ module.exports = {
 
     login: async function (credentials, forRole) {
         if (forRole === 'user') {
-            let info = await models.user.validateUserCredentials(credentials);
+            let info = await models.user.validateUserCredentials(
+                credentials,
+                forRole,
+            );
             if (!info) {
+                console.log('UserCode not used');
                 if (userCodeArr.includes(credentials.userCode)) {
-                    info = await createUser(credentials.userCode);
+                    info = await uCreateUser(credentials.userCode);
                 } else {
                     throw new AppError(
                         httpStatus.UNAUTHORIZED,
@@ -34,6 +40,14 @@ module.exports = {
                     );
                 }
             }
+    
+            // if (!info.isActive) {
+            //     throw new AppError(
+            //         httpStatus.FORBIDDEN,
+            //         'This account hasn’t been activated yet.',
+            //         true,
+            //     );
+            // }
 
             const jwt = issueJWT(info.id);
 
@@ -46,6 +60,7 @@ module.exports = {
         if (forRole === 'admin') {
             const info = await models.admin.validateUserCredentials(
                 credentials,
+                forRole,
             );
             if (!info) {
                 throw new AppError(
@@ -54,9 +69,17 @@ module.exports = {
                     true,
                 );
             }
-
+    
+            // if (!info.isActive) {
+            //     throw new AppError(
+            //         httpStatus.FORBIDDEN,
+            //         'This account hasn’t been activated yet.',
+            //         true,
+            //     );
+            // }
+    
             const jwt = issueJWT(info.id);
-
+    
             return {
                 user: { username: info.username },
                 token: jwt.token,

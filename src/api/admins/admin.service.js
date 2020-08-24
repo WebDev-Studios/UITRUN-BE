@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable camelcase */
 const models = require('../../models');
 const AppError = require('../../common/error/error');
