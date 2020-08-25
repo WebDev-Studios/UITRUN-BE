@@ -17,27 +17,29 @@ module.exports = {
     },
 
     // All function below is for USER only
-    createUser: async function (body) {
+    createUser: async function (userCode) {
         const user = await models.user.create({
-            stdId: body.stdId,
-            fullName: body.fullName,
-            major: body.major,
-            email: body.email,
-            dateOfBirth: body.dateOfBirth,
-            username: body.username,
-            password: body.password,
+            userCode: userCode,
+            stdId: '',
+            fullName: '',
             roleId: rolesMap.user, // user role
         });
 
         return user;
     },
 
-    updateUserById: async function (id, body) {
+    updateUserFirstLoginById: async function (id, body) {
         const user = await this.getUserById(id);
+        if (user.fullName !== '' || user.stdId !== '') {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                'This user has been updated.',
+                true,
+            );
+        }
         user.set(body);
         const updated = await user.save();
 
-        delete updated.dataValues.password;
         delete updated.dataValues.roleId;
         delete updated.dataValues.role;
         delete updated.dataValues.id;
@@ -46,6 +48,19 @@ module.exports = {
     },
 
     // All function below is for ADMIN only
+
+    updateUserById: async function (id, body) {
+        const user = await this.getUserById(id);
+        user.set(body);
+        const updated = await user.save();
+
+        delete updated.dataValues.stdId;
+        delete updated.dataValues.roleId;
+        delete updated.dataValues.role;
+        delete updated.dataValues.id;
+
+        return updated;
+    },
 
     getUserById: async function (id) {
         const found = await models.user.scope('role').findByPk(id);
@@ -64,11 +79,7 @@ module.exports = {
     getUserByIdentifier: async function (identifier) {
         const user = await models.user.findOne({
             where: {
-                [models.Sequelize.Op.or]: [
-                    { username: identifier },
-                    { stdId: identifier },
-                    { email: identifier },
-                ],
+                [models.Sequelize.Op.or]: [{ stdId: identifier }],
             },
         });
 
@@ -111,7 +122,7 @@ module.exports = {
         return info;
     },
 
-    activateUserByIds: async function (ids) {
+    activeUserByIds: async function (ids) {
         const activated = await models.user.update(
             {
                 isActive: true,
@@ -125,6 +136,22 @@ module.exports = {
 
         return activated;
     },
+    banUserByIds: async function (ids) {
+        const activated = await models.user.update(
+            {
+                isActive: false,
+            },
+            {
+                where: {
+                    id: ids,
+                },
+            },
+        );
+
+        return activated;
+    },
+
+    /* ------------- NOT USE ------------------ */
 
     updateUserRoleById: async function (id, role) {
         const granted = await models.user.update(

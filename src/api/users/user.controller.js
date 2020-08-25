@@ -1,15 +1,7 @@
 const userService = require('./user.service');
 
 module.exports = {
-    getAllUser: async (req, res, next) => {
-        try {
-            const user = await userService.getAllUser();
-
-            return res.json(user);
-        } catch (error) {
-            next(error);
-        }
-    },
+    // FOR USER ONLY
 
     whoAmI: async (req, res, next) => {
         try {
@@ -17,6 +9,32 @@ module.exports = {
             const user = await userService.whoAmI(id);
 
             res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    updateUserFirstLoginById: async (req, res, next) => {
+        try {
+            const { id } = req.user;
+            const user = await userService.updateUserFirstLoginById(
+                id,
+                req.body,
+            );
+
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    // ----- FOR ADMIN ONLY ------------------
+
+    getAllUser: async (req, res, next) => {
+        try {
+            const user = await userService.getAllUser();
+
+            return res.json(user);
         } catch (error) {
             next(error);
         }
@@ -33,16 +51,7 @@ module.exports = {
         }
     },
 
-    updateUserById: async (req, res, next) => {
-        try {
-            const { id } = req.user;
-            const user = await userService.updateUserById(id, req.body);
-
-            res.json(user);
-        } catch (error) {
-            next(error);
-        }
-    },
+    // ------------------ NOT USE ---------------------
 
     activateUserByIds: async (req, res, next) => {
         try {

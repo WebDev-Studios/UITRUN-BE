@@ -20,13 +20,18 @@ module.exports = function () {
 
     const strategy = new Strategy(params, async (payload, done) => {
         try {
-            const user = await models.admin.scope('role').findByPk(payload.sub);
+            const admin = await models.admin
+                .scope('role')
+                .findByPk(payload.sub);
+            const user = await models.user.scope('role').findByPk(payload.sub);
 
-            if (user) {
+            const info = admin || user;
+            
+            if (info) {
                 return done(null, {
-                    id: user.id,
-                    role: user.role.name,
-                    isActive: user.isActive,
+                    id: info.id,
+                    role: info.role.name,
+                    isActive: info.isActive,
                 });
             }
 

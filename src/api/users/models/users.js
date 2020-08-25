@@ -17,8 +17,17 @@ module.exports = (sequelize, Sequelize) => {
             },
             stdId: {
                 type: Sequelize.STRING(50),
-                allowNull: false
-            }
+                allowNull: false,
+            },
+            roleId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            isActive: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: true,
+                allowNull: false,
+            },
         },
         {
             sequelize,
@@ -29,14 +38,47 @@ module.exports = (sequelize, Sequelize) => {
     );
 
     User.associate = function (models) {
-
+        User.belongsTo(models.role, {
+            foreignKey: 'roleId',
+            as: 'role',
+            // onDelete: 'SET NULL',
+        });
         User.hasOne(models.board, {
             foreignKey: {
                 unique: true,
                 allowNull: false,
             },
         });
-    }
+        /**
+         * -------------- SCOPES ----------------
+         */
+
+        User.addScope('role', {
+            include: [
+                {
+                    model: models.role,
+                    as: 'role',
+                    required: true,
+                    attributes: {
+                        exclude: ['id', 'description'],
+                    },
+                },
+            ],
+        });
+    };
+    /**
+     * -------------- CLASS METHOD ----------------
+     */
+
+    User.validateUserCredentials = async function (credentials, role) {
+        const { userCode } = credentials;
+        const user = await User.scope('role').findOne({ where: { userCode } });
+        if (user && user.role.name === role) {
+            return user;
+        }
+
+        return null;
+    };
 
     return User;
-}
+};
