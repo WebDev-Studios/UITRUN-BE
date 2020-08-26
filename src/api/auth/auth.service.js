@@ -22,6 +22,7 @@ module.exports = {
     },
 
     login: async function (credentials, forRole) {
+        console.log(forRole);
         if (forRole === 'user') {
             let info = await models.user.validateUserCredentials(
                 credentials,
@@ -68,14 +69,6 @@ module.exports = {
             );
         }
 
-        // if (!info.isActive) {
-        //     throw new AppError(
-        //         httpStatus.FORBIDDEN,
-        //         'This account hasn’t been activated yet.',
-        //         true,
-        //     );
-        // }
-
         const jwt = issueJWT(info.id);
 
         return {
@@ -88,7 +81,7 @@ module.exports = {
     sendPasswordResetEmail: async function (body) {
         const { identifier } = body;
 
-        const user = await getUserByIdentifier(identifier);
+        const user = await adminServices.getUserByIdentifier(identifier);
 
         const psToken = await models.password_reset_token.upsert({
             userId: user.id,

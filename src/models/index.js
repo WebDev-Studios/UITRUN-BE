@@ -51,26 +51,24 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 (async function seeders() {
-    // try {
-    //     await db.admin.create({
-    //         stdId: 'admin',
-    //         fullName: 'admin',
-    //         email: 'admin@uit.edu.vn',
-    //         dateOfBirth: new Date('1/1/1900'),
-    //         username: process.env.ADMIN_USERNAME || 'admin',
-    //         password: process.env.ADMIN_PASSWORD || '@V3ryStR0N9P@asSWorD',
-    //         roleId: rolesMap.admin, // user role
-    //         isActive: true,
-    //     });
+    try {
+        await db.admin.create({
+            stdId: 'admin',
+            fullName: 'admin',
+            username: process.env.ADMIN_USERNAME || 'admin',
+            password: process.env.ADMIN_PASSWORD || '@V3ryStR0N9P@asSWorD',
+            roleId: rolesMap.admin, // user role
+            isActive: true,
+        });
 
-    //     console.log('Admin account was seeded.');
-    // } catch (err) {
-    //     if (err.name === 'SequelizeUniqueConstraintError') {
-    //         console.log('Admin accound already exist in database.');
-    //     } else {
-    //         console.log(err);
-    //     }
-    // }
+        console.log('Admin account was seeded.');
+    } catch (err) {
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            console.log('Admin accound already exist in database.');
+        } else {
+            console.log(err);
+        }
+    }
 })
 ();
 
