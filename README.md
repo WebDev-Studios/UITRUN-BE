@@ -1,3 +1,3 @@
 # Medical_BE
-Document API tại : localhost:3000/docs
-
+Document API tại : http://localhost:3000/docs/
+Vui lòng cài MySQL để run.
