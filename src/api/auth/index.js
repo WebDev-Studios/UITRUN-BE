@@ -1,9 +1,8 @@
 const router = require('express').Router();
 const authCtl = require('./auth.controller');
 const {
-    validateLogin,
+    validateAdminLogin,
     validateUserLogin,
-    validateRegister,
 } = require('./auth.validate');
 
 /**
@@ -11,14 +10,11 @@ const {
  */
 
 router.post('/login', validateUserLogin, authCtl.loginForUsers);
-router.post('/register', validateRegister, authCtl.register);
-router.post('/forgot-password', authCtl.sendPasswordResetEmail);
-router.post('/reset-password', authCtl.resetPassword);
 
 /**
  * *-------------- FOR ADMINS ----------------
  */
 
-router.post('/login/admin', authCtl.loginForAdmins);
+router.post('/login/admin', validateAdminLogin, authCtl.loginForAdmins);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const cors = require('cors');
 const db = require('./src/models');
 const passportAuth = require('./src/api/auth/passport.strategy')();
 const api = require('./src/api');
-// const swaggerDocs = require('./docs/index.json');
+const swaggerDocs = require('./docs/openapi.json');
 const errorManagement = require('./src/common/error/errorHandler');
 const AppError = require('./src/common/error/error');
 const { httpStatus } = require('./src/common/error/http-status');
@@ -38,7 +38,7 @@ app.use(passportAuth.initialize());
  * -------------- ROUTES ----------------
  */
 
-// app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // Swagger documents
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); // Swagger documents
 app.use('/api/v1', api); // Root
 
 /**
