@@ -18,32 +18,6 @@ module.exports = (sequelize, Sequelize) => {
 
     Admins.init(
         {
-            stdId: {
-                type: Sequelize.STRING(50),
-                unique: {
-                    args: true,
-                    msg: 'User with this stdId already exist.',
-                },
-            },
-            fullName: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            major: {
-                type: Sequelize.STRING(255),
-            },
-            email: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: {
-                    args: true,
-                    msg: 'User with this email already exist.',
-                },
-            },
-            dateOfBirth: {
-                type: Sequelize.DATEONLY,
-                allowNull: false,
-            },
             username: {
                 type: Sequelize.STRING(255),
                 allowNull: false,

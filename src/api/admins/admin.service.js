@@ -3,6 +3,7 @@ const models = require('../../models');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 const { rolesMap } = require('./role.enum');
+const userService = require('../users/user.service')
 
 module.exports = {
     whoAmI: async function (id) {
@@ -18,12 +19,7 @@ module.exports = {
 
     // All function below is for USER only
     createUser: async function (body) {
-        const user = await models.user.create({
-            stdId: body.stdId,
-            fullName: body.fullName,
-            userCode: body.username,
-            roleId: rolesMap.user, // user role
-        });
+        const user = await userService.createUser(body);
 
         return user;
     },
