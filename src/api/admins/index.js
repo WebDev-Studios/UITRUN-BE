@@ -44,4 +44,6 @@ router.patch(
 
 router.delete('/:id', checkPermission(['admin']), adminCtl.deleteUserById); // Delete users or editors by id
 
+router.post('/create', checkPermission(['admin']), adminCtl.createUser); // Create user by user code
+
 module.exports = router;

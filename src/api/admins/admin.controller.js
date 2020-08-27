@@ -77,4 +77,14 @@ module.exports = {
             next(error);
         }
     },
+
+    createUser: async (req, res, next) => {
+        try {
+            const {userCode} = req.body;
+            const user = await adminService.createUser(userCode);
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
 };
