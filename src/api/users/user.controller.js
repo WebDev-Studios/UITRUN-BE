@@ -34,10 +34,10 @@ module.exports = {
         try {
             const user = await userService.getAllUser();
 
-            delete user.dataValues.role;
-            delete user.dataValues.roleId;
-            delete user.dataValues.isActive;
-            delete user.dataValues.id;
+            // delete user.dataValues.role;
+            // delete user.dataValues.roleId;
+            // delete user.dataValues.isActive;
+            // delete user.dataValues.id;
 
             return res.json(user);
         } catch (error) {
