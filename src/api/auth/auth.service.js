@@ -6,7 +6,6 @@ const { issueJWT } = require('../../common/crypto/utils');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 const { passwordResetEmail } = require('../../common/email/send');
-const admin = require('../admins/models/admin');
 
 module.exports = {
     register: async function (body) {
