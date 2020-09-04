@@ -5,8 +5,6 @@ const userCodes = require('../users/user.codes');
 const { issueJWT } = require('../../common/crypto/utils');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
-const { passwordResetEmail } = require('../../common/email/send');
-const admin = require('../admins/models/admin');
 
 module.exports = {
     register: async function (body) {
@@ -71,26 +69,12 @@ module.exports = {
 
         const jwt = issueJWT(info.id);
 
-        return {
-            user: { username: info.username },
-            token: jwt.token,
-            exprires: jwt.expires,
-        };
+            return {
+                user: { username: info.username },
+                token: jwt.token,
+                exprires: jwt.expires,
+            };
+        }
     },
 
-    sendPasswordResetEmail: async function (body) {
-        const { identifier } = body;
-
-        const user = await adminServices.getUserByIdentifier(identifier);
-
-        const psToken = await models.password_reset_token.upsert({
-            userId: user.id,
-            token: 'kkkkkkkkk',
-            expires: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
-        });
-
-        await passwordResetEmail(user.email, psToken.token);
-
-        return { message: 'Reset password email was sended.' };
-    },
 };

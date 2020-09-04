@@ -4,7 +4,17 @@ const { httpStatus } = require('../../common/error/http-status');
 
 module.exports = {
     getScore: async () => {
-        const score = await models.board.findAll({});
+        // const score = await models.board.findAll({});
+        // return score;
+        const sql = `select 
+                        users.std_id,
+                        boards.score,
+                        boards.time
+                    from 
+                        boards join users on boards.user_id = users.id `;
+        const score = await models.sequelize.query(sql,{
+            type: models.sequelize.QueryTypes.SELECT,
+        });
         return score;
     },
     insertNewUser: async (id) => {
@@ -35,5 +45,5 @@ module.exports = {
         delete score.dataValues.id;
 
         return score;
-    }
+    }, 
 };
