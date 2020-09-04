@@ -20,6 +20,11 @@ module.exports = (sequelize, Sequelize) => {
             },
             score: {
                 type: Sequelize.INTEGER,
+                defaultValue: null,
+                allowNull: true,
+            },
+            time: {
+                type: Sequelize.TIME,
             }
         },
         {

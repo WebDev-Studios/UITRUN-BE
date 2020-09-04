@@ -46,8 +46,15 @@ module.exports = {
         return questions;
     },
 
-    getQuestionById: async function (id) {
-        const found = await models.question.scope('categories').findByPk(id);
+    create: async function (data) {
+        console.log(data);
+        const question = await models.question.create(data);
+
+        return question;
+    },
+
+    getById: async function (id) {
+        const found = await models.question.findByPk(id);
 
         if (!found) {
             throw new AppError(
