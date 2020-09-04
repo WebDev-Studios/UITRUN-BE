@@ -42,7 +42,11 @@ module.exports = {
             const jwt = issueJWT(info.id);
 
             return {
-                user: { userCode: info.userCode },
+                user: { 
+                    userCode: info.userCode,
+                    fullName: info.fullName,
+                    stdId: info.stdId,
+                },
                 token: jwt.token,
                 exprires: jwt.expires,
             };
