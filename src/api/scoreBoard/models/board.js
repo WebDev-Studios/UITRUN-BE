@@ -11,20 +11,15 @@ module.exports = (sequelize, Sequelize) => {
                 unique: true,
                 allowNull: false,
             },
-            startTime: {
-                type: Sequelize.DATE,
-                allowNull: true,
-            },
-            finishTime: { 
-                type: Sequelize.DATE, 
-            },
             score: {
                 type: Sequelize.INTEGER,
                 defaultValue: null,
                 allowNull: true,
             },
             time: {
-                type: Sequelize.TIME,
+                type: Sequelize.INTEGER,
+                defaultValue: null,
+                allowNull: true,
             }
         },
         {

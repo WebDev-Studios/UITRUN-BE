@@ -36,7 +36,25 @@ module.exports = {
             const found = await models.question.findByPk(ele.id);
             // eslint-disable-next-line no-continue
             if (!found) continue;
-            if (found.result === ele.ans) {
+            let ansKey = 0;
+            switch (ele.ans) {
+                case found.answerA:
+                    ansKey = 'A';
+                    break;
+                case found.answerB:
+                    ansKey = 'B';
+                    break;
+                case found.answerC:
+                    ansKey = 'C';
+                    break;
+                case found.answerD:
+                    ansKey = 'D';
+                    break;
+                default:
+                    break;
+            }
+
+            if (ansKey === found.result) {
                 score += 1;
             }
         }

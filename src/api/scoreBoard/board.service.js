@@ -20,16 +20,17 @@ module.exports = {
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
-            startTime: new Date(Date.now()),
             score: 0,
+            time: 0,
         });
         return user;
     },
-    updateScore: async (id, score) => {
+    updateScore: async (id, score, time) => {
         const user = await models.board.update(
             {
                 score: score,
                 finishTime: new Date(Date.now()),
+                time: time,
             },
             {
                 where: {
