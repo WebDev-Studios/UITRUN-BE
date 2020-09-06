@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 module.exports = (sequelize, Sequelize) => {
     class User extends Sequelize.Model {}
 

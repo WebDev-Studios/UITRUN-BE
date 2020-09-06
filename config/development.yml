@@ -1,7 +1,7 @@
 db:
     host: '127.0.0.1'
     username: 'root'
-    password: '123456789'
+    password: 'QuocHuy@2000'
 
 jwt:
     secret: 'myjwtsecret'

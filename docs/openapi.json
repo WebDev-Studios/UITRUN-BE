@@ -32,11 +32,45 @@
       "description": "Everything about user"
     },
     {
-      "name": "admin",
-      "description": "Everything about admin"
+      "name": "board",
+      "description": "Everything about score board"
     }
   ],
   "paths": {
+    "/board": {
+      "get": {
+        "tags": [
+          "board"
+        ],
+        "summary": "Get all score board",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "getScore",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/board"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/question": {
       "get": {
         "tags": [
@@ -134,7 +168,7 @@
         ],
         "summary": "Get a limit of random questions for an exam",
         "description": "Multiple status values can be provided with comma separated strings",
-        "operationId": "getARandomExam",
+        "operationId": "getRandomExam",
         "responses": {
           "200": {
             "description": "successful operation",
@@ -160,6 +194,108 @@
           "404": {
             "description": "User is yet made this exam.",
             "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "Send result to server for calculate score",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "finalExam",
+        "requestBody": {
+          "description": "Result need to be added.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Id question"
+                    },
+                    "result": {
+                      "type": "string",
+                      "enum": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User is yet made this exam.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/question/search": {
+      "get": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN] Search question by content",
+        "description": "Use query to search",
+        "operationId": "searchByContent",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "content",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/question"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -332,7 +468,7 @@
         ]
       }
     },
-    "/login": {
+    "/auth/login": {
       "post": {
         "tags": [
           "auth"
@@ -403,7 +539,7 @@
         "x-codegen-request-body-name": "body"
       }
     },
-    "/login/admin": {
+    "/auth/login/admin": {
       "post": {
         "tags": [
           "auth"
@@ -558,6 +694,167 @@
         ],
         "x-codegen-request-body-name": "body"
       }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN] get a user by id",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not Admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN, EDITOR] Update an existing user by id.",
+        "operationId": "updateUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "User info to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not Admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN] Deletes a user by id.",
+        "operationId": "deleteUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -611,16 +908,13 @@
             "description": "answer D"
           },
           "result": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "A",
-                "B",
-                "C",
-                "D"
-              ]
-            },
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
             "description": "result"
           },
           "image": {
@@ -650,20 +944,24 @@
           "name": "Order"
         }
       },
-      "admin": {
+      "board": {
         "type": "object",
         "properties": {
-          "id": {
+          "userId": {
             "type": "integer",
             "format": "int64"
           },
-          "username": {
-            "type": "string",
-            "description": "username of admin"
+          "score": {
+            "type": "integer",
+            "format": "int64"
           },
-          "password": {
+          "startTime": {
             "type": "string",
-            "description": "password for admin"
+            "description": "time start exam"
+          },
+          "finishTime": {
+            "type": "string",
+            "description": "time finish exam"
           }
         }
       }

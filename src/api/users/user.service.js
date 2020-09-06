@@ -54,7 +54,6 @@ module.exports = {
         user.set(body);
         const updated = await user.save();
 
-        delete updated.dataValues.stdId;
         delete updated.dataValues.roleId;
         delete updated.dataValues.role;
         delete updated.dataValues.id;

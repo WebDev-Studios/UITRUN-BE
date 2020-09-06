@@ -22,4 +22,20 @@ router.patch(
     userCtl.updateUserFirstLoginById,
 );
 
+/**
+ * -------------- FOR ADMIN ----------------
+ */
+
+ // Get all user
+router.get('/', checkPermission(['admin']), userCtl.getAllUser);
+
+// Get user by ID
+router.get('/:id', checkPermission(['admin']), userCtl.getUserById);
+
+// Update user by ID
+router.patch('/:id', checkPermission(['admin']), userCtl.updateUserById);
+
+// Delete user by ID
+router.delete('/:id', checkPermission(['admin']), userCtl.deleteUserById);
+
 module.exports = router;

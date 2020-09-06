@@ -7,10 +7,9 @@ module.exports = {
     getRandomExam: async function (req, res, next) {
         try {
             const { id } = req.user;
-            console.log(req.user.id);
             // check user be made exam
             if (await scoreboardService.getScoreById(id)) {
-                // if yes -> return me  ssage
+                // if yes -> return made exam
                 throw new AppError(
                     httpStatus.NOT_FOUND,
                     'User is yet made this exam.',
@@ -19,6 +18,7 @@ module.exports = {
             }
 
             // if not yes -> make random exam
+            console.log('User get exam:', req.user.id);
             await scoreboardService.insertNewUser(id);
             const exam = await questionService.getRandomExam();
 
@@ -29,14 +29,14 @@ module.exports = {
     },
     finalExam: async function (req, res, next) {
         try {
-            const { arrayAns } = req.body;
+            const { arrayAns, time } = req.body;
             const { id } = req.user;
 
             const examScore = await questionService.checkQuestionToScore(
                 arrayAns,
             );
-            // update score for user
-            const score = await scoreboardService.updateScore(id, examScore);
+            // update score and time for user
+            await scoreboardService.updateScore(id, examScore, time);
 
             return res.json(examScore);
         } catch (err) {

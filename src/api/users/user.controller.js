@@ -34,6 +34,11 @@ module.exports = {
         try {
             const user = await userService.getAllUser();
 
+            // delete user.dataValues.role;
+            // delete user.dataValues.roleId;
+            // delete user.dataValues.isActive;
+            // delete user.dataValues.id;
+
             return res.json(user);
         } catch (error) {
             next(error);
@@ -44,6 +49,33 @@ module.exports = {
         try {
             const { id } = req.params;
             const user = await userService.getUserById(id);
+
+            delete user.dataValues.role;
+            delete user.dataValues.roleId;
+            delete user.dataValues.isActive;
+            delete user.dataValues.id;
+
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    deleteUserById: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const affected = await userService.deleteUserById(id);
+
+            res.json({ affected });
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    updateUserById: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const user = await userService.updateUserById(id, req.body);
 
             res.json(user);
         } catch (error) {
@@ -76,14 +108,4 @@ module.exports = {
         }
     },
 
-    deleteUserById: async (req, res, next) => {
-        try {
-            const { id } = req.params;
-            const affected = await userService.deleteUserById(id);
-
-            res.json({ affected });
-        } catch (error) {
-            next(error);
-        }
-    },
 };
