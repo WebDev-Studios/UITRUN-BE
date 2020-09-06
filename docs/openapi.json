@@ -37,7 +37,7 @@
     }
   ],
   "paths": {
-    "/board": {
+    "/score": {
       "get": {
         "tags": [
           "board"
@@ -177,7 +177,55 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/question"
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int64"
+                      },
+                      "content": {
+                        "type": "string",
+                        "description": "question content"
+                      },
+                      "answerA": {
+                        "type": "string",
+                        "description": "answer A"
+                      },
+                      "answerB": {
+                        "type": "string",
+                        "description": "answer B"
+                      },
+                      "answerC": {
+                        "type": "string",
+                        "description": "answer C"
+                      },
+                      "answerD": {
+                        "type": "string",
+                        "description": "answer D"
+                      },
+                      "image": {
+                        "type": "string",
+                        "description": "image url"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "question description"
+                      },
+                      "isShuffle": {
+                        "type": "integer",
+                        "description": "Shuffle answers ?",
+                        "items": {
+                          "type": "integer",
+                          "default": 0,
+                          "enum": [
+                            1,
+                            0,
+                            true,
+                            false
+                          ]
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -214,23 +262,25 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "Id question"
-                    },
-                    "result": {
-                      "type": "string",
-                      "enum": [
-                        "A",
-                        "B",
-                        "C",
-                        "D"
-                      ]
+                "type": "object",
+                "properties": {
+                  "arrayAns": {
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Id question"
+                        },
+                        "result": {
+                          "type": "string",
+                          "description": "answer"
+                        }
+                      }
                     }
+                  },
+                  "time": {
+                    "type": "string"
                   }
                 }
               }
@@ -947,7 +997,7 @@
       "board": {
         "type": "object",
         "properties": {
-          "userId": {
+          "std_id": {
             "type": "integer",
             "format": "int64"
           },
@@ -955,13 +1005,9 @@
             "type": "integer",
             "format": "int64"
           },
-          "startTime": {
+          "time": {
             "type": "string",
-            "description": "time start exam"
-          },
-          "finishTime": {
-            "type": "string",
-            "description": "time finish exam"
+            "format": "time"
           }
         }
       }

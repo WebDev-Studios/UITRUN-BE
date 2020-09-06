@@ -20,8 +20,8 @@ module.exports = {
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
-            score: 0,
-            time: 0,
+            score: null,
+            time: null,
         });
         return user;
     },
@@ -29,7 +29,6 @@ module.exports = {
         const user = await models.board.update(
             {
                 score: score,
-                finishTime: new Date(Date.now()),
                 time: time,
             },
             {
