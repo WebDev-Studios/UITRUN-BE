@@ -43,8 +43,6 @@ module.exports = {
     getScoreById: async (id) => {
         const score = await models.board.findByPk(id);
 
-        delete score.dataValues.id;
-
         return score;
     }, 
 };
