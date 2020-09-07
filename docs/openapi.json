@@ -272,7 +272,7 @@
                           "type": "integer",
                           "description": "Id question"
                         },
-                        "result": {
+                        "ans": {
                           "type": "string",
                           "description": "answer"
                         }
