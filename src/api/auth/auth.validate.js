@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const { schemaValidator } = require('../../common/schema-validator/utils');
 
 const loginUserSchema = Joi.object({
-    userCode: Joi.string().min(5).max(5).required(),
+    userCode: Joi.string().min(5).max(10).required(),
 }).unknown(true);
 const loginAdminSchema = Joi.object({
     username: Joi.string().min(1).max(255).required(),

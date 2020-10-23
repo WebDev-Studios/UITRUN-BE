@@ -22,6 +22,7 @@ module.exports = {
             userCode: userCode,
             stdId: '',
             fullName: '',
+            numberPhone: '',
             roleId: rolesMap.user, // user role
         });
 

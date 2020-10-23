@@ -45,6 +45,7 @@ module.exports = {
                 user: { 
                     userCode: info.userCode,
                     fullName: info.fullName,
+                    numberPhone: info.numberPhone,
                     stdId: info.stdId,
                 },
                 token: jwt.token,

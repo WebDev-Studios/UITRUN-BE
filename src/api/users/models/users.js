@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            numberPhone: {
+                type: Sequelize.STRING(10),
+                allowNull: false,
+            },
             isActive: {
                 type: Sequelize.BOOLEAN,
                 defaultValue: true,

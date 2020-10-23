@@ -41,7 +41,7 @@ function issueJWT(userId) {
         iat: Date.now(),
     };
 
-    const signedToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
+    const signedToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET || config.jwtSecret, {
         expiresIn: expiresIn,
         // algorithm: 'RS256',
     });

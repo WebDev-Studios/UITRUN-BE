@@ -20,7 +20,7 @@ const { httpStatus } = require('./src/common/error/http-status');
 require('dotenv').config();
 
 // Configures and sync models to the database
-db.sequelize.sync();
+db.sequelize.sync({alter:true});
 
 const app = express();
 
