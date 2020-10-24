@@ -1,0 +1,10 @@
+db:
+    host: '127.0.0.1'
+    username: 'root'
+    password: 'QuocHuy@2000'
+
+jwt:
+    secret: 'myjwtsecret'
+
+cors:
+    origin: false

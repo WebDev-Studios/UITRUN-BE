@@ -1,0 +1,977 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "UITRun API",
+    "description": "This is an API document for UIT Run.",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "trivonhan@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "User and admin authorization"
+    },
+    {
+      "name": "questions",
+      "description": "Everything about questions and exams"
+    },
+    {
+      "name": "user",
+      "description": "Everything about user"
+    },
+    {
+      "name": "board",
+      "description": "Everything about score board"
+    }
+  ],
+  "paths": {
+    "/board": {
+      "get": {
+        "tags": [
+          "board"
+        ],
+        "summary": "Get all score board",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "getScore",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/board"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/question": {
+      "get": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN, EDITOR] Finds questions by query",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "findQuestionsByquery",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/question"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN, EDITOR] Add a new question",
+        "operationId": "addQuestion",
+        "requestBody": {
+          "description": "question that needs to be added.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/question"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/question"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "422": {
+            "description": "Question already exist. Or categoryFourId does not match any. category.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/question/exam": {
+      "get": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "Get a limit of random questions for an exam",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "getRandomExam",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/question"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User is yet made this exam.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "Send result to server for calculate score",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "finalExam",
+        "requestBody": {
+          "description": "Result need to be added.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Id question"
+                    },
+                    "result": {
+                      "type": "string",
+                      "enum": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User is yet made this exam.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/question/search": {
+      "get": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN] Search question by content",
+        "description": "Use query to search",
+        "operationId": "searchByContent",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "content",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/question"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/question/{id}": {
+      "get": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN, EDITOR] get a question by id",
+        "operationId": "getQuestionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "question id to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/question"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "Question doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "patch": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN, EDITOR] Update an existing question by id.",
+        "operationId": "updateQuestion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "question id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Question that needs to be updated.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/question"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/question"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "Category doesn't exist.",
+            "content": {}
+          },
+          "422": {
+            "description": "Parent id does not match any parent category.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": [
+          "questions"
+        ],
+        "summary": "[ADMIN] Deletes a question by id.",
+        "operationId": "deleteQuestion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "question id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "Category doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "[USER] login by user code",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userCode": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "userCode": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "expires": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid User Code.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account has been banned yet.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/auth/login/admin": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "[ADMIN] login for admin and editor",
+        "operationId": "loginForAdmins",
+        "requestBody": {
+          "description": "Credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "expires": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid credentials.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[USER] get current user information",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "operationId": "getUserInformation",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "This account hasn’t been activated yet. Permission Denied.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/user/update-first-login": {
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[USER] update student ID and full name at first login",
+        "description": "Multiple status values can be provided with comma separate strings",
+        "operationId": "updateUserFirstLoginById",
+        "requestBody": {
+          "description": "Information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "stdId": {
+                    "type": "string"
+                  },
+                  "fullName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This user has been updated.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN] get a user by id",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not Admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN, EDITOR] Update an existing user by id.",
+        "operationId": "updateUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "User info to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not Admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "[ADMIN] Deletes a user by id.",
+        "operationId": "deleteUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid queries value",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid Credentials.",
+            "content": {}
+          },
+          "403": {
+            "description": "You are not admin. Permission Denied.",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist.",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "fullname"
+          },
+          "stdId": {
+            "type": "string",
+            "description": "student id"
+          },
+          "userCode": {
+            "type": "string",
+            "description": "date"
+          }
+        }
+      },
+      "question": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content": {
+            "type": "string",
+            "description": "question content"
+          },
+          "answerA": {
+            "type": "string",
+            "description": "answer A"
+          },
+          "answerB": {
+            "type": "string",
+            "description": "answer B"
+          },
+          "answerC": {
+            "type": "string",
+            "description": "answer C"
+          },
+          "answerD": {
+            "type": "string",
+            "description": "answer D"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "description": "result"
+          },
+          "image": {
+            "type": "string",
+            "description": "image url"
+          },
+          "description": {
+            "type": "string",
+            "description": "question description"
+          },
+          "isShuffle": {
+            "type": "integer",
+            "description": "Shuffle answers ?",
+            "items": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                1,
+                0,
+                true,
+                false
+              ]
+            }
+          }
+        },
+        "xml": {
+          "name": "Order"
+        }
+      },
+      "board": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "time start exam"
+          },
+          "finishTime": {
+            "type": "string",
+            "description": "time finish exam"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
