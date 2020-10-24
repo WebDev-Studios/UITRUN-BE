@@ -81,6 +81,7 @@ module.exports = (sequelize, Sequelize) => {
                 },
             ],
         });
+
         Admins.addScope('token', {
             include: [
                 {
@@ -122,8 +123,9 @@ module.exports = (sequelize, Sequelize) => {
 
     Admins.validateUserCredentials = async function (credentials, role) {
         const { username, password } = credentials;
-        const user = await Admins.scope('role').findOne({ where: { username } });
-        console.log(user.validPassword(password));
+        const user = await Admins.scope('role').findOne({
+            where: { username },
+        });
         if (
             user &&
             user.validPassword(password) && // password is validated

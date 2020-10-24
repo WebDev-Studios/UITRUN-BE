@@ -3,10 +3,27 @@ version: '3.7'
 services:
     backend:
         container_name: ump-api
+<<<<<<< HEAD
+        image: docker.pkg.github.com/webdev-studios/uitrun-be/uitrun-be:lastest
+=======
+>>>>>>> 1fff385eed672783c015ba90ada26497236c9e84
         restart: always
         volumes:
             - ump-volume:/usr/src/app
         ports:
+<<<<<<< HEAD
+            - 8080:8080
+        env_file:
+            - ./.env
+        networks:
+            ump-net:
+        
+volumes:
+    uitrun-volume:
+networks:
+    uitrun-net:
+        
+=======
             - 3000:3000
         env_file:
             - ./.env
@@ -18,3 +35,4 @@ volumes:
     ump-volume:
 networks:
     ump-net:
+>>>>>>> 1fff385eed672783c015ba90ada26497236c9e84

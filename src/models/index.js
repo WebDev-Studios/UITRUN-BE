@@ -17,7 +17,7 @@ const sequelize = new Sequelize(
         timezone: '+07:00',
         host: process.env.DB_HOST || config.host,
         dialect: 'mysql',
-        // logging: false,
+        logging: false,
     },
 );
 
@@ -67,7 +67,6 @@ db.Sequelize = Sequelize;
             console.log(err);
         }
     }
-})
-();
+})();
 
 module.exports = db;
