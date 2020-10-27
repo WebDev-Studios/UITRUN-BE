@@ -80,11 +80,11 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const {userCode} = req.body;
+            const { userCode } = req.body;
             const user = await adminService.createUser(userCode);
             res.json(user);
         } catch (error) {
             next(error);
         }
-    }
+    },
 };

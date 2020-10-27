@@ -3,7 +3,7 @@ const models = require('../../models');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 const { rolesMap } = require('./role.enum');
-const userService = require('../users/user.service')
+const userService = require('../users/user.service');
 
 module.exports = {
     whoAmI: async function (id) {
@@ -94,8 +94,7 @@ module.exports = {
     },
 
     getAllUser: async function () {
-        const info = await models.user.findAll({
-        });
+        const info = await models.user.findAll({});
         return info;
     },
 
