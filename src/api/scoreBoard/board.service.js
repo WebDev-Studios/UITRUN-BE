@@ -21,7 +21,6 @@ module.exports = {
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
-            fullName: '',
             score: 0,
             time: 0,
         });
