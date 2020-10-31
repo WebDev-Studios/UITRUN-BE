@@ -8,6 +8,7 @@ module.exports = {
         // return score;
         const sql = `select 
                         users.std_id,
+                        users.full_name,
                         boards.score,
                         boards.time
                     from 
@@ -20,6 +21,7 @@ module.exports = {
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
+            fullName: '',
             score: 0,
             time: 0,
         });
