@@ -20,11 +20,11 @@ const { httpStatus } = require('./src/common/error/http-status');
 require('dotenv').config();
 
 // Configures and sync models to the database
-db.sequelize.sync();
+db.sequelize.sync({ alter: true });
 
 const app = express();
 
-app.use(cors(config.get('server'))); // CORS
+app.use(cors(config.get('cors'))); // CORS
 app.use(logger('dev')); // Logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -53,6 +53,7 @@ module.exports = (sequelize, Sequelize) => {
                 unique: true,
                 allowNull: false,
             },
+            onDelete: 'CASCADE',
         });
         /**
          * -------------- SCOPES ----------------

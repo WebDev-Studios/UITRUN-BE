@@ -1,0 +1,5 @@
+cors:
+    origin:
+        - 'https://uitrun.com'
+        - 'https://user.uitrun.com'
+        - 'https://dashboard.uitrun.com'
