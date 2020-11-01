@@ -13,7 +13,7 @@ module.exports = {
                         boards.time
                     from 
                         boards join users on boards.user_id = users.id `;
-        const score = await models.sequelize.query(sql,{
+        const score = await models.sequelize.query(sql, {
             type: models.sequelize.QueryTypes.SELECT,
         });
         return score;
@@ -28,14 +28,26 @@ module.exports = {
         return user;
     },
     updateScore: async (id, score, time) => {
-        if (await await models.board.findByPk(id) ) {
+        if (
+            await models.board.findAll({
+                where: {
+                    userId: id,
+                    score: {
+                        [models.Op.ne]: 0,
+                    },
+                    time: {
+                        [models.Op.ne]: 0,
+                    },
+                }
+            })
+        ) {
             // if yes -> return made exam
             throw new AppError(
                 httpStatus.NOT_FOUND,
                 'User is yet made this exam.',
                 true,
             );
-        } 
+        }
         const user = await models.board.update(
             {
                 score: score,
@@ -53,5 +65,5 @@ module.exports = {
         const score = await models.board.findByPk(id);
 
         return score;
-    }, 
+    },
 };
