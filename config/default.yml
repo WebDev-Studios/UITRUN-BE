@@ -2,7 +2,7 @@ server:
     port: 3000
 
 db:
-    database: 'uitrun'
+    database: 'uit-run'
     port: 3306
 
 jwt:

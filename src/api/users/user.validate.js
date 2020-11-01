@@ -14,6 +14,7 @@ const idListSchema = Joi.object({
 const userUpdateSchema = Joi.object({
     stdId: Joi.string().min(6).max(255),
     fullName: Joi.string().min(6).max(255),
+    numberPhone: Joi.string().min(10).max(11),
 }).unknown(true);
 
 module.exports = {

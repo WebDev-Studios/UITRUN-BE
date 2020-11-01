@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            numberPhone: {
+                type: Sequelize.STRING(10),
+                allowNull: false,
+            },
             isActive: {
                 type: Sequelize.BOOLEAN,
                 defaultValue: true,
@@ -49,6 +53,7 @@ module.exports = (sequelize, Sequelize) => {
                 unique: true,
                 allowNull: false,
             },
+            onDelete: 'CASCADE',
         });
         /**
          * -------------- SCOPES ----------------

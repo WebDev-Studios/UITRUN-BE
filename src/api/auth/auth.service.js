@@ -21,7 +21,6 @@ module.exports = {
     },
 
     login: async function (credentials, forRole) {
-        console.log(forRole);
         if (forRole === 'user') {
             let info = await models.user.validateUserCredentials(
                 credentials,
@@ -42,9 +41,10 @@ module.exports = {
             const jwt = issueJWT(info.id);
 
             return {
-                user: { 
+                user: {
                     userCode: info.userCode,
                     fullName: info.fullName,
+                    numberPhone: info.numberPhone,
                     stdId: info.stdId,
                 },
                 token: jwt.token,
@@ -54,6 +54,7 @@ module.exports = {
         if (forRole === 'admin') {
             const info = await models.admin.validateUserCredentials(
                 credentials,
+                forRole,
             );
             if (!info) {
                 throw new AppError(
