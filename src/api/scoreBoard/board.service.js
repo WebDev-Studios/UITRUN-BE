@@ -8,6 +8,7 @@ module.exports = {
         // return score;
         const sql = `select 
                         users.std_id,
+                        users.full_name,
                         boards.score,
                         boards.time
                     from 
@@ -20,12 +21,21 @@ module.exports = {
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
-            score: null,
-            time: null,
+            fullName: '',
+            score: 0,
+            time: 0,
         });
         return user;
     },
     updateScore: async (id, score, time) => {
+        if (await await models.board.findByPk(id) ) {
+            // if yes -> return made exam
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                'User is yet made this exam.',
+                true,
+            );
+        } 
         const user = await models.board.update(
             {
                 score: score,
