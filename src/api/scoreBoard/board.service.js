@@ -33,10 +33,10 @@ module.exports = {
                 where: {
                     userId: id,
                     score: {
-                        [models.Op.ne]: 0,
+                        [models.Sequelize.Op.ne]: 0,
                     },
                     time: {
-                        [models.Op.ne]: 0,
+                        [models.Sequelize.Op.ne]: 0,
                     },
                 }
             })
