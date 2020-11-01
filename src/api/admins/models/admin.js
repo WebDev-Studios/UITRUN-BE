@@ -129,7 +129,7 @@ module.exports = (sequelize, Sequelize) => {
         if (
             user &&
             user.validPassword(password) && // password is validated
-            (user.role.name === role || user.role.name === 'editor')
+            (user.role.name === 'admin' || user.role.name === 'editor')
         ) {
             return user;
         }

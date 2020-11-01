@@ -28,10 +28,17 @@ module.exports = {
         return user;
     },
     updateScore: async (id, score, time) => {
+        if (await await models.board.findByPk(id) ) {
+            // if yes -> return made exam
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                'User is yet made this exam.',
+                true,
+            );
+        } 
         const user = await models.board.update(
             {
                 score: score,
-                finishTime: new Date(Date.now()),
                 time: time,
             },
             {
