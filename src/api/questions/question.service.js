@@ -25,13 +25,20 @@ module.exports = {
 
         return question;
     },
-    checkQuestionToScore: async function (arrayAns = []) {
+    checkQuestionToScore: async function (arrayAns = [], historyQuestions) {
         /**
          * array : [{id: , ans: }, { , }]
          */
         let score = 0;
+        const arraySameQues = [];
+        let historyAnss = '';
+        const arrayHisQues = historyQuestions.split('_');
         for (let i = 0; i < arrayAns.length; i += 1) {
             const ele = arrayAns[i];
+            // check questions return and questions list was created
+            if (arrayHisQues.includes(ele.id.toString()) && !arraySameQues.includes(ele.id.toString())) {
+                arraySameQues.push(ele.id.toString());
+            }
             // eslint-disable-next-line no-await-in-loop
             const found = await models.question.findByPk(ele.id);
             // eslint-disable-next-line no-continue
@@ -57,8 +64,16 @@ module.exports = {
             if (ansKey === found.result) {
                 score += 1;
             }
+            // Answers - Add user's answer to history answer
+            historyAnss += `${ele.id}-${ansKey}`;
+            historyAnss += (i < arrayAns.length - 1) ? '_' : '';
         }
-        return score;
+        // if length of question return = length of question what have in list of question created -> results | 0 | -1 (= cheat)
+        // if length of ans is 0 -> return history ans is " " (not "") and save to database.
+        return {
+            score: (arraySameQues.length === arrayAns.length) ? score : -1,
+            anss: (historyAnss === '') ? ' ' : historyAnss,
+        };
     },
 
     getAll: async function (page = 0, pageSize = 10) {

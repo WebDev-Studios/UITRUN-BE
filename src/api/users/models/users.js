@@ -33,6 +33,16 @@ module.exports = (sequelize, Sequelize) => {
                 defaultValue: true,
                 allowNull: false,
             },
+            historyQues: {
+                type: Sequelize.STRING(255),
+                defaultValue: '',
+                allowNull: false,
+            },
+            historyAnss: {
+                type: Sequelize.STRING(255),
+                defaultValue: '',
+                allowNull: false,
+            }
         },
         {
             sequelize,

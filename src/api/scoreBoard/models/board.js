@@ -16,11 +16,21 @@ module.exports = (sequelize, Sequelize) => {
                 defaultValue: null,
                 allowNull: true,
             },
-            time: {
+            timeClient: {
                 type: Sequelize.INTEGER,
                 defaultValue: null,
                 allowNull: true,
-            }
+            },
+            timeServer: {
+                type: Sequelize.INTEGER,
+                defaultValue: null,
+                allowNull: true,
+            },
+            timeStartExam: {
+                type: Sequelize.DATE,
+                defaultValue: null,
+                allowNull: true,
+            },
         },
         {
             sequelize,
