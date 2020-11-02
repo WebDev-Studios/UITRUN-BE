@@ -1,5 +1,6 @@
 const questionService = require('./question.service');
 const scoreboardService = require('../scoreBoard/board.service');
+const userService = require('../users/user.service');
 const AppError = require('../../common/error/error');
 const { httpStatus } = require('../../common/error/http-status');
 
@@ -8,20 +9,41 @@ module.exports = {
         try {
             const { id } = req.user;
             // check user be made exam
+            /*
             if (await scoreboardService.getScoreById(id)) {
-                // if yes -> return made exam
                 throw new AppError(
                     httpStatus.NOT_FOUND,
                     'User is yet made this exam.',
                     true,
                 );
+            } */
+            if (await userService.isUserStartedExam(id)) {
+                throw new AppError(
+                    httpStatus.FORBIDDEN,
+                    'User has started or completed this exam.',
+                    true,
+                );
+            }
+            /* -> Check if user not have information */
+            if (await userService.isUserNotHaveInfo(id)) {
+                throw new AppError(
+                    httpStatus.UNAUTHORIZED,
+                    'User needs to update personal information to continue.',
+                    true,
+                );
             }
 
-            // if not yes -> make random exam
-            console.log('User get exam:', req.user.id);
+            console.log(`[%]----- User with id "${id}" got exam at ${new Date()}`);
             await scoreboardService.insertNewUser(id);
             const exam = await questionService.getRandomExam();
-
+            const lengthQues = exam.length;
+            let quesStr = '';
+            for (let i=0; i<lengthQues; i+=1) {
+                quesStr += exam[i].id;
+                quesStr += (i < lengthQues - 1) ? '_' : '';
+            }
+            await userService.updateHistoryQuestions(id, quesStr);
+            await scoreboardService.updateTimeStartExam(id);
             return res.json(exam);
         } catch (err) {
             return next(err);
@@ -29,16 +51,26 @@ module.exports = {
     },
     finalExam: async function (req, res, next) {
         try {
-            const { arrayAns, time } = req.body;
             const { id } = req.user;
-
-            const examScore = await questionService.checkQuestionToScore(
-                arrayAns,
+            /* Check if user not submit any times before */
+            if (await userService.isUserSubmitedExam(id)) {
+                throw new AppError(
+                    httpStatus.FORBIDDEN,
+                    'User has completed this exam.',
+                    true,
+                );
+            }
+            const now = new Date();
+            const timeServerEnd = now.getTime();
+            const { arrayAns, time } = req.body;
+            const questionList = await userService.getHistoryQuestions(id);
+            const examResult = await questionService.checkQuestionToScore(
+                arrayAns, questionList
             );
             // update score and time for user
-            await scoreboardService.updateScore(id, examScore, time);
-
-            return res.json(examScore);
+            await scoreboardService.updateScore(id, examResult.score, time, timeServerEnd);
+            await userService.updateHistoryAnss(id, examResult.anss);
+            return res.json(examResult.score);
         } catch (err) {
             return next(err);
         }

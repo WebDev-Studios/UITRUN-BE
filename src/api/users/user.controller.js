@@ -1,4 +1,7 @@
 const userService = require('./user.service');
+const scoreboardService = require('../scoreBoard/board.service');
+const AppError = require('../../common/error/error');
+const { httpStatus } = require('../../common/error/http-status');
 
 module.exports = {
     // FOR USER ONLY
@@ -78,6 +81,22 @@ module.exports = {
             const user = await userService.updateUserById(id, req.body);
 
             res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+    resetUserResultByCode: async (req, res, next) => {
+        try {
+            const user = await userService.resetResultByCode(req.body.code);
+            if (!user) {
+                throw new AppError(
+                    httpStatus.NOT_FOUND,
+                    `User with code "${req.body.code}" was not exist.`,
+                    true,
+                );
+            }
+            const deleteResult = await scoreboardService.deleteResultByUserId(user.id);
+            res.json(deleteResult);
         } catch (error) {
             next(error);
         }

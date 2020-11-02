@@ -9,10 +9,55 @@ module.exports = {
         const user = await this.getUserById(id);
 
         delete user.dataValues.password;
+        delete user.dataValues.historyQues;
+        delete user.dataValues.historyAnss;
         delete user.dataValues.roleId;
         delete user.dataValues.role;
         delete user.dataValues.id;
 
+        return user;
+    },
+    /* ================== FOR QUESTIONS ================== */
+    isUserNotHaveInfo: async function (id) {
+        const user = await this.getUserById(id);
+        return user.fullName === '' || user.stdId === '';
+    },
+    isUserStartedExam: async function (id) {
+        const user = await this.getUserById(id);
+        return user.historyQues !== '';
+    },
+    isUserSubmitedExam: async function (id) {
+        const user = await this.getUserById(id);
+        return user.historyAnss !== '';
+    },
+    getHistoryQuestions: async function (id) {
+        const user = await this.getUserById(id);
+        return user.historyQues;
+    },
+    updateHistoryQuestions: async function (id, questions) {
+        const user = await models.user.update(
+            {
+                historyQues: questions,
+            },
+            {
+                where: {
+                    id: id,
+                },
+            },
+        );
+        return user;
+    },
+    updateHistoryAnss: async function (id, anss) {
+        const user = await models.user.update(
+            {
+                historyAnss: anss,
+            },
+            {
+                where: {
+                    id: id,
+                },
+            },
+        );
         return user;
     },
 
@@ -92,6 +137,18 @@ module.exports = {
         }
 
         return user;
+    },
+    resetResultByCode: async function (code) {
+        const user = await models.user.findOne({
+            where: {
+                userCode: code,
+            },
+        });
+        if (!user) return null;
+        user.historyQues = '';
+        user.historyAnss = '';
+        const updated = await user.save();
+        return updated;
     },
 
     deleteUserById: async function (id) {

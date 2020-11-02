@@ -37,5 +37,7 @@ router.patch('/:id', checkPermission(['admin']), userCtl.updateUserById);
 
 // Delete user by ID
 router.delete('/:id', checkPermission(['admin']), userCtl.deleteUserById);
+// Reset result user by code
+router.post('/reset-result-quiz-by-code', checkPermission(['admin']), userCtl.resetUserResultByCode);
 
 module.exports = router;
