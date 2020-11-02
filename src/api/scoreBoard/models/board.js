@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 module.exports = (sequelize, Sequelize) => {
     class Board extends Sequelize.Model {}
 
@@ -18,12 +16,12 @@ module.exports = (sequelize, Sequelize) => {
             },
             timeClient: {
                 type: Sequelize.INTEGER,
-                defaultValue: null,
+                defaultValue: 0,
                 allowNull: true,
             },
             timeServer: {
                 type: Sequelize.INTEGER,
-                defaultValue: null,
+                defaultValue: 0,
                 allowNull: true,
             },
             timeStartExam: {

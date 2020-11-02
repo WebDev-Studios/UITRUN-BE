@@ -67,6 +67,7 @@ module.exports = {
             const examResult = await questionService.checkQuestionToScore(
                 arrayAns, questionList
             );
+            console.log(`[%]----- User with id "${id}" submit exam at ${new Date()} with (same/returned): ${examResult.sameLength}/${arrayAns.length}`);
             // update score and time for user
             await scoreboardService.updateScore(id, examResult.score, time, timeServerEnd);
             await userService.updateHistoryAnss(id, examResult.anss);
