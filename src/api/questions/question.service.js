@@ -68,11 +68,12 @@ module.exports = {
             historyAnss += `${ele.id}-${ansKey}`;
             historyAnss += (i < arrayAns.length - 1) ? '_' : '';
         }
-        // if length of question return = length of question what have in list of question created -> results | 0 | -1 (= cheat)
+        // if length of question return = length of question what have in list of question created -> results | 0
         // if length of ans is 0 -> return history ans is " " (not "") and save to database.
         return {
-            score: (arraySameQues.length === arrayAns.length) ? score : -1,
+            score: score,
             anss: (historyAnss === '') ? ' ' : historyAnss,
+            sameLength: arraySameQues.length,
         };
     },
 

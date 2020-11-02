@@ -38,12 +38,13 @@ module.exports = {
         });
         return score;
     },
+    
     insertNewUser: async (id) => {
         const user = await models.board.create({
             userId: id,
-            fullName: '',
             score: 0,
-            time: 0,
+            timeClient: 0,
+            timeServer: 0,
         });
         return user;
     },
