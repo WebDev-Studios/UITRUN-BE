@@ -1,4 +1,5 @@
 const adminService = require('./admin.service');
+const scoreboardService = require('../scoreBoard/board.service');
 
 module.exports = {
     getAllUser: async (req, res, next) => {
@@ -83,6 +84,15 @@ module.exports = {
             const { userCode } = req.body;
             const user = await adminService.createUser(userCode);
             res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    getScoreFull: async (req, res, next) => {
+        try {
+            const score = await scoreboardService.getScoreFull();
+            res.json(score);
         } catch (error) {
             next(error);
         }

@@ -28,6 +28,7 @@ router.patch(
 
 router.get('/', checkPermission(['admin']), adminCtl.getAllUser); // Get all users include editors
 router.get('/:id', checkPermission(['admin']), adminCtl.getUserById); // Get users or editors by id
+router.get('/score/full', checkPermission(['admin']), adminCtl.getScoreFull);
 
 router.patch(
     '/activate',

@@ -13,7 +13,24 @@ module.exports = {
                         users.std_id,
                         users.full_name,
                         boards.score,
-                        boards.time
+                        boards.time_client as 'time'
+                    from 
+                        boards join users on boards.user_id = users.id `;
+        const score = await models.sequelize.query(sql, {
+            type: models.sequelize.QueryTypes.SELECT,
+        });
+        return score;
+    },
+    getScoreFull: async () => {
+        const sql = `select 
+                        users.std_id,
+                        users.full_name,
+                        users.history_ques as 'list_ques_created',
+                        users.history_anss as 'list_anss_returned',
+                        boards.score,
+                        boards.time_client,
+                        boards.time_server,
+                        boards.time_start_exam as 'exam_start_at'
                     from 
                         boards join users on boards.user_id = users.id `;
         const score = await models.sequelize.query(sql, {

@@ -17,6 +17,7 @@ module.exports = {
             next(error);
         }
     },
+    /*
     insertNewUser: async (req, res, next) => {
         try {
             const user = await boardService.insertNewUser(req.params.id);
@@ -25,4 +26,5 @@ module.exports = {
             next(error);
         }
     },
+    */
 };
