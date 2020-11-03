@@ -32,9 +32,15 @@ module.exports = {
                     true,
                 );
             }
-
             console.log(`[%]----- User with id "${id}" got exam at ${new Date()}`);
-            await scoreboardService.insertNewUser(id);
+            const userBoard = await scoreboardService.insertNewUser(id);
+            if (!userBoard) {
+                throw new AppError(
+                    httpStatus.FORBIDDEN,
+                    'User has started or completed this exam.',
+                    true,
+                );
+            }
             const exam = await questionService.getRandomExam();
             const lengthQues = exam.length;
             let quesStr = '';

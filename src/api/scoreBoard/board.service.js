@@ -9,7 +9,7 @@ module.exports = {
         return score;
     },
     getScore: async () => {
-        const sql = `select 
+        const sql = `select distinct
                         users.std_id,
                         users.full_name,
                         boards.score,
@@ -22,15 +22,15 @@ module.exports = {
         return score;
     },
     getScoreFull: async () => {
-        const sql = `select 
-                        users.std_id,
-                        users.full_name,
-                        users.history_ques as 'list_ques_created',
+        const sql = `select distinct
+                        users.std_id as "mssv",
+                        users.full_name as "name",
+                        users.history_ques as 'questions',
                         users.history_anss as 'list_anss_returned',
-                        boards.score,
-                        boards.time_client,
-                        boards.time_server,
-                        boards.time_start_exam as 'exam_start_at'
+                        boards.score as 'score',
+                        boards.time_client as 'client_submited_at',
+                        boards.time_server as 'server_saved_at,
+                        boards.time_start_exam as 'exam_started_at'
                     from 
                         boards join users on boards.user_id = users.id `;
         const score = await models.sequelize.query(sql, {
@@ -40,6 +40,8 @@ module.exports = {
     },
     
     insertNewUser: async (id) => {
+        const olduser = await models.board.findByPk(id);
+        if (olduser) return olduser;
         const user = await models.board.create({
             userId: id,
             score: 0,
@@ -51,11 +53,13 @@ module.exports = {
     updateScore: async (id, score, timeClient, timeServerEnd) => {
         const user = await models.board.findByPk(id);
         const timeServerStart = new Date(user.timeStartExam);
-        const timeServer = (timeServerEnd - timeServerStart.getTime()) / 1000;
-        user.score = score;
+        let timeClientServer = (timeServerEnd - timeServerStart.getTime()) / 1000;
+        timeClientServer = timeClientServer < 0 ? 0 : timeClientServer;
+        timeClientServer = timeClientServer > 900 ? 900 : timeClientServer;
+        user.score = (timeClient > 900 || timeClient < 0) ? -1*score : score;
         user.timeClient = timeClient;
-        user.timeServer = timeServer;
-        console.log(`[%]----- User with id "${id}" has submited exam with client/server time: ${timeClient} / ${timeServer} (s)`);
+        user.timeServer = timeClientServer;
+        console.log(`[%]----- User with id "${id}" has submited exam with client/server time: ${timeClient} / ${timeClientServer} (s)`);
         const updated = await user.save();
 
         delete updated.dataValues.timeServer;
