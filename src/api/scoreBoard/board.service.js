@@ -9,7 +9,7 @@ module.exports = {
         return score;
     },
     getScore: async () => {
-        const sql = `select distinct
+        const sql = `select
                         users.std_id,
                         users.full_name,
                         boards.score,
@@ -22,7 +22,7 @@ module.exports = {
         return score;
     },
     getScoreFull: async () => {
-        const sql = `select distinct
+        const sql = `select
                         users.std_id as "mssv",
                         users.full_name as "name",
                         users.history_ques as 'questions',
