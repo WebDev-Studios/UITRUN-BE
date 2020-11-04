@@ -23,13 +23,13 @@ module.exports = {
     },
     getScoreFull: async () => {
         const sql = `select
-                        users.std_id as "mssv",
-                        users.full_name as "name",
+                        users.std_id as 'mssv',
+                        users.full_name as 'name',
                         users.history_ques as 'questions',
                         users.history_anss as 'list_anss_returned',
                         boards.score as 'score',
                         boards.time_client as 'client_submited_at',
-                        boards.time_server as 'server_saved_at,
+                        boards.time_server as 'server_saved_at',
                         boards.time_start_exam as 'exam_started_at'
                     from 
                         boards join users on boards.user_id = users.id `;
@@ -50,13 +50,13 @@ module.exports = {
         });
         return user;
     },
-    updateScore: async (id, score, timeClient, timeServerEnd) => {
+    updateScore: async (id, score, timeClient, timeServerEnd, isSameLength) => {
         const user = await models.board.findByPk(id);
         const timeServerStart = new Date(user.timeStartExam);
         let timeClientServer = (timeServerEnd - timeServerStart.getTime()) / 1000;
         timeClientServer = timeClientServer < 0 ? 0 : timeClientServer;
         timeClientServer = timeClientServer > 900 ? 900 : timeClientServer;
-        user.score = (timeClient > 900 || timeClient < 0) ? -1*score : score;
+        user.score = (timeClient > 900 || timeClient < 0 || !isSameLength) ? -1*score : score;
         user.timeClient = timeClient;
         user.timeServer = timeClientServer;
         console.log(`[%]----- User with id "${id}" has submited exam with client/server time: ${timeClient} / ${timeClientServer} (s)`);
